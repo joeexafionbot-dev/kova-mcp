@@ -1,0 +1,847 @@
+{
+	"globals":	{
+		"network":	{
+			"gekkoname":	{
+				"description":	"Hostname of myGEKKO device",
+				"format":	"string[name]()",
+				"type":	"STRING",
+				"permission":	"READ",
+				"index":	1
+			},
+			"language":	{
+				"description":	"Language of myGEKKO device. DE=German,IT=Italian,EN=English,NL=Dutch,ES=Spanish,FR=French,CS=Czech",
+				"format":	"enum[0=DE,1=IT,2=EN,3=NL,4=ES,5=FR,6=CS]()",
+				"type":	"AV",
+				"permission":	"READ",
+				"index":	2
+			},
+			"version":	{
+				"description":	"Software version of myGEKKO device",
+				"format":	"int[0,...](version)",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	3
+			},
+			"hardware":	{
+				"description":	"Hardware version of myGEKKO device",
+				"format":	"string[version]()",
+				"type":	"STRING",
+				"permission":	"READ",
+				"index":	4
+			}
+		},
+		"alarm":	{
+			"sumstate":	{
+				"description":	"Global alarm state of myGEKKO device",
+				"format":	"enum[0=ok,1=unacknowledged,2=acknowledged,3=alarm]()",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	101
+			}
+		},
+		"meteo":	{
+			"twilight":	{
+				"description":	"Current twilight value in lux (lx)",
+				"format":	"float[0.00,100000.00](lx)",
+				"type":	"AI",
+				"permission":	"READ",
+				"index":	201
+			},
+			"humidity":	{
+				"description":	"Current relative humidity level",
+				"format":	"float[0.00,100.00](%)",
+				"type":	"AI",
+				"permission":	"READ",
+				"index":	202
+			},
+			"wind":	{
+				"description":	"Current value of the wind in meter/second (m/s)",
+				"format":	"float[0.00,100000.00](m/s)",
+				"type":	"AI",
+				"permission":	"READ",
+				"index":	206
+			},
+			"temperature":	{
+				"description":	"Current value of the temperature in degrees celsius (°C)",
+				"format":	"float[-100.00,100.00](°C)",
+				"type":	"AI",
+				"permission":	"READ",
+				"index":	207
+			},
+			"rain":	{
+				"description":	"Current value of the accumulated rain in liter/hour (l/h)",
+				"format":	"float[0.00,100.00](l/h)",
+				"type":	"AI",
+				"permission":	"READ",
+				"index":	208
+			}
+		}
+	},
+	"lights":	{
+		"item0":	{
+			"name":	"light 1",
+			"page":	"1",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"currentState enum[0=off,1=on](); dimLevel float[0.00,100.0](%); rgbColor int[24bit->R:23-16|G:15-8|B:7-0](); tunableWhiteLevel float[0.00,100.0](%); elementInfo enum[0=ok,1=manualOff,2=manualOn,3=locked,4=alarm](); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			},
+			"scmd":	{
+				"description":	"Summary of the commands and their formats",
+				"format":	"1|0|D100|T|C44782|TW100 (On,Off|0-100[%]|1|24BitRGB|0-100[%])",
+				"type":	"STRING",
+				"permission":	"WRITE",
+				"index":	100070
+			}
+		},
+		"group0":	{
+			"name":	"all",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Off|1=On]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	1000000
+			},
+			"scmd":	{
+				"description":	"Summary of the group commands and their formats",
+				"format":	"0|1 (Off|On)",
+				"type":	"AV",
+				"permission":	"WRITE",
+				"index":	1000001
+			}
+		}
+	},
+	"blinds":	{
+		"item0":	{
+			"name":	"blinds 1",
+			"page":	"living",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"currentState enum[-2=holdDown,-1=movingDown,0=stop,1=movingUp,2=holdUp](); positionLevel float[0.00,100.00](%); rotationLevel float[0.00,100.00](%); elementInfo enum[0=ok,1=manualOff,2=manualOn,3=locked,4=alarm](); rotationRange enum[90=ninety,180=hundredEighty](°); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			},
+			"scmd":	{
+				"description":	"Summary of the commands and their formats",
+				"format":	"-2|-1|0|1|2|T|P55.4|S32.4 (Hold_down|Down|Stop|Up|Hold_up|Toggle|Position|Angle)",
+				"type":	"STRING",
+				"permission":	"WRITE",
+				"index":	150070
+			}
+		},
+		"group0":	{
+			"name":	"blinds",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[1=Up|-1=Down]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	1500000
+			},
+			"scmd":	{
+				"description":	"Summary of the group commands and their formats",
+				"format":	"2|-2 (Up|Down)",
+				"type":	"AV",
+				"permission":	"WRITE",
+				"index":	1500001
+			}
+		}
+	},
+	"vents":	{
+		"item0":	{
+			"name":	"ventilation",
+			"page":	"ventilation devices",
+			"sumstate":	{
+			    "description":	"Summary of the states and their formats",
+				"format":	"workingLevel enum[0=off,1=level1,2=level2,3=level3,4=level4](); deviceModel enum[0=standard,1=pluggit,2=zimmermannV1,3=westaflex,4=stiebelLWZ,5=zimmermannV2](); workingMode #zimmermann:enum[0=off,1=ecoSummer,2=ecoWinter,3=comfort,4=stove]#others:[0=auto,1=manual,2=pluggitAuto,3=pluggitWeek,4=](); bypassState enum[0=auto,1=manual,2=summer](); maximumWorkingLevel enum[0=off,1=level1,2=level2,3=level3,4=level4](); relativeHumidityLevel float[0.00,100.00](%); airQualityLevel float[0.00,100.00](%); co2Value float[0.00,100000.00](ppm); supplyAirTemperatureValue float[-100.00,100.00](°C); exhaustAirTemperatureValue float[-100.00,100.00](°C); outsideAirTemperatureValue float[-100.00,100.00](°C); outgoingAirTemperatureValue float[-100.00,100.00](°C); supplyAirWorkingLevel float[0.00,100.00](%); exhaustAirWorkingLevel float[0.00,100.00](%); elementInfo enum[0=auto,1=manualOff,2=manualOn,3=locked,4=alarm](); subWorkingMode #zimmermann:enum[0=middleTemp+offset,1=onlyOffset]#others:enum[0=exhaust,1=exhaust/supply,2=exhaust/supply/heatRecovery](); coolingModeState enum[0=off,1=on](); dehumidModeState enum[0=off,1=on](); bypassMode enum[0=auto,1=manual,2=summer](); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			},
+			"scmd":	{
+				"description":	"Summary of the commands and their formats",
+				"format":	"-1|1|2|3|4|T|BY0|BY1|BY2|C0|C1|D0|D1|Mx (Off|Level1|Level2|Level3|Level4|Toggle|BypassAuto|BypassManual|BypassSummer|Cool.Off|Cool.On|Dehumid.Off|Dehumid.On|OperatingMode[0..x])",
+				"type":	"STRING",
+				"permission":	"WRITE",
+				"index":	200070
+			}
+		},
+		"group0":	{
+			"name":	"Grp 1",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Off|1=On]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	2000000
+			},
+			"scmd":	{
+				"description":	"Summary of the group commands and their formats",
+				"format":	"-1|1|2|3|4 (Off|Level1|Level2|Level3|Level4)",
+				"type":	"AV",
+				"permission":	"WRITE",
+				"index":	2000001
+			}
+		}
+	},
+	"loads":	{
+		"item0":	{
+			"name":	"Deep fryer",
+			"page":	"kitchen",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"currentState enum[0=off,1=onImpulse,2=onPermanent](); elementInfo enum[0=ok,1=manualOff,2=manualOn,3=locked,4=alarm](); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			},
+			"scmd":	{
+				"description":	"Summary of the commands and their formats",
+				"format":	"0|1|2|T (Off|OnImpulse|OnPermanent|Toggle)",
+				"type":	"STRING",
+				"permission":	"WRITE",
+				"index":	250070
+			}
+		},
+		"group0":	{
+			"name":	"Grp 1",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Off|1=On]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	2500000
+			},
+			"scmd":	{
+				"description":	"Summary of the group commands and their formats",
+				"format":	"0|2 (Off|On)",
+				"type":	"AV",
+				"permission":	"WRITE",
+				"index":	2500001
+			}
+		}
+	},
+	"roomtemps":	{
+		"item0":	{
+			"name":	"Living room",
+			"page":	"rooms",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"temperatureValue float[-100.00,100.00](°C); temperatureSetPointValue float[-100.00,100.00](°C); valveOpeningLevel float[0.00,100.00](%); workingMode #standard:enum[1=off,8=comfort,16=reduced,64=manual,256=standby]#knx:enum[0=auto,1=comfort,2=standby,3=economy,4=buildingProtection](); reserved null[reserved](); temperatureAdjustmentValue float[-100.00,100.00](°C); coolingModeState enum[0=off,1=on](); elementInfo enum[0=ok,1=manualOff,2=manualOn,3=locked,4=alarm](); relativeHumidityLevel float[0.00,100.00](%); airQualityLevel #co2:float[0.00,100.00](%)#quality:float[0.00,100.00](%)#voc:float[0,100000.00](ppm); floorTemperatureValue float[-100.00,100.00](°C); deviceModel enum[0=standard,3=knxDevice](); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			},
+			"scmd":	{
+				"description":	"Summary of the commands and their formats",
+				"format":	"M1|M2|M8|M16|M64|M256|K2.4|S22.5 (ModeOff|ModeOn|ModeComfort|ModeReduced|ModeManual|ModeStandby|TempAdjustment[°C]|Setpoint[°C])",
+				"type":	"STRING",
+				"permission":	"WRITE",
+				"index":	300070
+			}
+		},
+		"group0":	{
+			"name":	"Grp 1",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Off|1=On|2=Comfort|3=Reduced]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	3000000
+			},
+			"scmd":	{
+				"description":	"Summary of the group commands and their formats",
+				"format":	"M1|M2|M8|M16 (Mode_Off|Mode_On|Mode_Comfort|Mode_Reduced)",
+				"type":	"AV",
+				"permission":	"WRITE",
+				"index":	3000001
+			}
+		}
+	},
+	"heatingsystems":	{
+		"item0":	{
+			"name":	"Heating",
+			"page":	"Main heating",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"deviceModel enum[0=individual,1=buderus,2=stiebel,3=tecalor,4=vaillant](); coolingModeState [0=off,1=on](); flowTemperatureValue float[0.00,100.00](°C); flowTemperatureSetPointValue float[0.00,100.00](°C); currentState enum[0=off,1=on](); elementInfo enum[0=ok,1=manualOff,2=manualOn,3=locked,4=alarm](); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			}
+		},
+		"group0":	{
+			"name":	"Grp 1",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Off|1=On]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	3500000
+			}
+		}
+	},
+	"heatingcircuits":	{
+		"item0":	{
+			"name":	"Heating circuit",
+			"page":	"Main heating",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"deviceModel enum[0=individual,1=buderus,2=stiebel,3=vaillant](); flowTemperatureValue float[0.00,100.00](°C); returnFlowTemperatureValue float[0.00,100.00](°C); dewPointValue float[0.00,100.00](°C); pumpWorkingLevel float[0.00,100.00](%); coolingModeState enum[0=off,1=on](); flowTemperatureSetPointValue float[0.00,100.00](°C); valveOpeningLevel float[0.00,100.00](%); elementInfo enum[0=ok,1=manualOff,2=manualOn,3=locked,4=alarm](); currentState enum[0=off,1=on,2=auto](); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			}
+		},
+		"group0":	{
+			"name":	"Grp 1",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Off|1=On]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	4000000
+			}
+		}
+	},
+	"energycosts":	{
+		"item0":	{
+			"name":	"PV production",
+			"page":	"Energy",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"currentPowerValue float[0.00,...](powerUnit); totalEnergyTodayValue float[0.00,...](energyUnit); totalEnergyMonthValue float[0.00,...](energyUnit); totalEnergyValue float[0.00,...](energyUnit); nominalPowerValue float[0.00,...](powerUnit); energyUnit string[xh:x=kW,ml,l3,...](I.S.); powerUnit string[x:x=kW,ml,l3,...](I.S.); totalEnergyToday0h6hValue float[0.00,...](energyUnit); totalEnergyToday6h12hValue float[0.00,...](energyUnit); totalEnergyToday12h18hValue float[0.00,...](energyUnit); totalEnergyToday18h24hValue float[0.00,...](energyUnit); totalEnergyYesterday0h6hValue float[0.00,...](energyUnit); totalEnergyYesterday6h12hValue float[0.00,...](energyUnit); totalEnergyYesterday12h18hValue float[0.00,...](energyUnit); totalEnergyYesterday18h24hValue float[0.00,...](energyUnit); elementInfo enum[0=ok,1=manualOff,2=manualOn,3=locked,4=alarm](); totalEnergyThisYearValue float[0.00,...](energyUnit); totalEnergyInPeriodValue float[0.00,...](energyUnit); startDateTotalEnergyInPeriod string[dd.mm.yyyy hh:mm:ss](); counterDirection enum[0=consumption,1=production](); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			},
+			"scmd":	{
+				"description":	"Summary of the commands and their formats",
+				"format":	"RP (ResetPeriod)",
+				"type":	"STRING",
+				"permission":	"WRITE",
+				"index":	450070
+			}
+		},
+		"group0":	{
+			"name":	"Grp 1",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Off|1=On]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	4500000
+			}
+		}
+	},
+	"alarms_logics":	{
+		"item0":	{
+			"name":	"PV storage",
+			"page":	"Energy",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"currentValue float[...,...](); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			},
+			"scmd":	{
+				"description":	"Summary of the commands and their formats",
+				"format":	"S44.7 (SetpointValue)",
+				"type":	"STRING",
+				"permission":	"WRITE",
+				"index":	500070
+			}
+		},
+		"group0":	{
+			"name":	"Grp 1",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Off|1=On]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	5000000
+			}
+		}
+	},
+	"accessdoors":	{
+		"item0":	{
+			"name":	"Office CEO",
+			"page":	"Offices",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"accessControllerActionState enum[0=close,1=open,2=keepOpen](); elementInfo enum[0=ok,1=manualOff,2=manualOn,3=locked,4=alarm](); accessState enum[0=closed,1=open](); gateRuntimeLevel int[0,100](%); accessType enum[0=door,1=gate,2=barrier](); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			}
+		},
+		"group0":	{
+			"name":	"Grp 1",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Closed|1=Open]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	5500000
+			}
+		}
+	},
+	"energymanager":	{
+		"item0":	{
+			"name":	"Energy manager",
+			"page":	"Manager",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"elementInfo enum[0=ok,1=manualOff,2=manualOn,3=locked,4=alarm](); gridMeterState enum[0=notActive,1=active](); solarPanelState enum[0=notActive,1=active](); batteryState enum[0=notActive,1=active](); gridMeterCurrentPowerValue float[0.00,...](W); currentPowerExportedToGridValue float[0.00,...](W); currentPowerFromSolarPanelsValue float[0.00,...](W); currentPowerFromBatteryValue float[0.00,...](W); currentPowerChargingBatteryValue float[0.00,...](W); currentHomePowerConsumptionValue float[0.00,...](W); currentAlternativePowerConsupmtionValue float[0.00,...](W); totalDailyImportedEnergyFromGridValue float[0.00,...](Wh); totalDailyExportedEnergyToGridValue float[0.00,...](Wh); totalDailyEnergyFromSolarPanelsValue float[0.00,...](Wh); totalDailyEnergyFromBatteryValue float[0.00,...](Wh); totalDailyEneryyChargingBatteryValue float[0.00,...](Wh); totalDailyHomeEnergyConsumptionValue float[0.00,...](Wh); loadSheddingState enum[0=off,1=on](); EMSState enum[0=off,1=on](); batteryModel enum[0=unavailable,1=e3dc-s10,2=byd,3=vartastorage,4=individual,5=bySunSpecInverters](); batterySoCLevel int[0,100](%); EMSEnabled enum[0=disabled,1=enabled](); maximumPowerConsumptionFromGridValue float[0.00,...](kW); maximumPowerExportToGridValue float[0.00,...](kW); maximumPowerSolarPanelsValue float[0.00,...](kW); maximumPowerBatteryValue float[0.00,...](kW); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			}
+		}
+	},
+	"alarmsystem":	{
+		"item0":	{
+			"name":	"Alarm system",
+			"page":	"Alarm system",
+			"zone1":	"Inside",
+			"zone2":	"Outside",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"alarmState enum[0=ok,1=alarm](); zone1DeviceStatus enum[0=off,1=on](); zone1SharpState enum[0=unsharp,1=sharp](); zone1AlarmState enum[0=ok,2=alarmButUnsharp,3=alarm](); zone2DeviceStatus enum[0=off,1=on](); zone2SharpState enum[0=unsharp,1=sharp](); zone2AlarmState enum[0=ok,2=alarmButUnsharp,3=alarm](); deviceModel enum[1=standard,2=complex400_V1](); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			},
+			"scmd":	{
+				"description":	"Summary of the commands and their formats",
+				"format":	"1|2 (Zone 1 Sharp|Zone 2 Sharp)",
+				"type":	"STRING",
+				"permission":	"WRITE",
+				"index":	650070
+			}
+		},
+		"group0":	{
+			"name":	"Grp 1",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Off|1=Sharp]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	6500000
+			},
+			"scmd":	{
+				"description":	"Summary of the group commands and their formats",
+				"format":	"1 (Sharp)",
+				"type":	"AV",
+				"permission":	"WRITE",
+				"index":	6500001
+			}
+		}
+	},
+	"multirooms":	{
+		"item0":	{
+			"name":	"Room 1",
+			"page":	"Level 1",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"playerCurrentState enum[0=off,1=on](); currentVolumeLevel int[0,100](%); currentPlayingTime int[0,...](s); currentAudioTitle string[name](); currentPlaylistIndex int[0,15](); playlist0Name string[name](); playlist1Name string[name](); playlist2Name string[name](); playlist3Name string[name](); playlist4Name string[name](); playlist5Name string[name](); playlist6Name string[name](); playlist7Name string[name](); playlist8Name string[name](); playlist9Name string[name](); playlist10Name string[name](); playlist11Name string[name](); playlist12Name string[name](); playlist13Name string[name](); playlist14Name string[name](); playlist15Name string[name](); currentSongIndex int[0,...](); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			},
+			"scmd":	{
+				"description":	"Summary of the commands and their formats",
+				"format":	"PLAY|STOP|T|N+1|C1|V24.5 (Play|Stop|Toggle|ChangeSong|ChangePlaylist|ChangeVolume)",
+				"type":	"STRING",
+				"permission":	"WRITE",
+				"index":	700070
+			}
+		},
+		"group0":	{
+			"name":	"Grp 1",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Off|1=On]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	7000000
+			}
+		}
+	},
+	"cams":	{
+		"item0":	{
+			"name":	"Entrance",
+			"page":	"Webcam",
+			"imagepath":	"https://www.foto-webcam.eu/webcam/kronplatz/current/400.jpg",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"newRecordsAvailableState enum[0=no,1=yes](); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			}
+		},
+		"group0":	{
+			"name":	"Grp 1",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Off|1=On]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	7500000
+			}
+		}
+	},
+	"smsemail":	{
+		"item0":	{
+			"name":	"SMS/EMAIL",
+			"page":	"Mail",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"currentState enum[0=off,1=on](); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			},
+			"scmd":	{
+				"description":	"Summary of the commands and their formats",
+				"format":	"-1|1 (Off|On)",
+				"type":	"STRING",
+				"permission":	"WRITE",
+				"index":	800070
+			}
+		}
+	},
+	"actions":	{
+		"item0":	{
+			"name":	"Central",
+			"page":	"Action",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"currentState enum[0=off,1=on](); startConditionState enum[0=off,1=on](); elementInfo enum[0=ok,1=manualOff,2=manualOn,3=locked,4=alarm](); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			},
+			"scmd":	{
+				"description":	"Summary of the commands and their formats",
+				"format":	"-1|1|T (Stop|Start|Toggle)",
+				"type":	"STRING",
+				"permission":	"WRITE",
+				"index":	850070
+			}
+		},
+		"group0":	{
+			"name":	"Grp 1",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Off|1=On]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	8500000
+			}
+		}
+	},
+	"clocks":	{
+		"item0":	{
+			"name":	" Mittagessen",
+			"page":	"Uhr",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"currentState enum[0=off,1=on,2=onCoincidence](); startConditionState enum[0=off,1=on](); elementInfo enum[0=ok,1=manualOff,2=manualOn,3=locked,4=alarm](); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			},
+			"scmd":	{
+				"description":	"Summary of the commands and their formats",
+				"format":	"0|1|2 (Off|On|onCoincidence)",
+				"type":	"STRING",
+				"permission":	"WRITE",
+				"index":	900070
+			}
+		},
+		"group0":	{
+			"name":	"Grp 1",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Off|1=On]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	9000000
+			}
+		}
+	},
+	"controlcircuits":	{
+		"item0":	{
+			"name":	"Heating rod control",
+			"page":	"Control loops",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"sensorValue float[-10000.00,10000.00](); sensorType enum[0=temperaturePT,1=temperatureAnalog,2=pressure,3=humidity,4=individual](); elementInfo enum[0=ok,1=manualOff,2=manualOn,3=locked,4=alarm](); pump1WorkingPowerLevel float[0.00-100.00](%); pump2WorkingPowerLevel float[0.00-100.00](%); pump3WorkingPowerLevel float[0.00-100.00](%); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			}
+		},
+		"group0":	{
+			"name":	"Grp 1",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Off|1=On]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	9500000
+			}
+		}
+	},
+	"air_handling_unit":	{
+		"item0":	{
+			"name":	"Air Conditioning",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"supplyAirTemperatureValue float[-100.00,100.00](°C); supplyAirTemperatureSetPointValue float[-100.00,100.00](°C); exhaustAirTemperatureValue float[-100.00,100.00](°C); exhaustAirTemperatureSetPointValue float[-100.00,100.00](°C); outsideAirTemperatureValue float[-100.00,100.00](°C); outgoingAirTemperatureValue float[-100.00,100.00](°C); supplyRelativeHumidityLevel float[0.00,100.00](%); supplyRelativeHumiditySetPointLevel float[0.00,100.00](%); exhaustRelativeHumidityLevel float[0.00,100.00](%); exhaustRelativeHumiditySetPointLevel float[0.00,100.00](%); airQualityLevel float[0.00,100.00](%); airQualitySetPointLevel float[0.00,100.00](%); supplyPressureValue float[0.00,...](Pa); supplyPressureSetPointValue float[0.00,...](Pa); exhaustPressureValue float[0.00,...](Pa); exhaustPressureSetPointValue float[0.00,...](Pa); workingLevelSetPointLevel float[0.00,100.00](%); supplyState enum[0=off,1=on](); supplyWorkingLevel float[0.00,100.00](%); supplyFlapOpeningLevel float[0.00,100.00](%); exhaustState enum[0=off,1=on](); exhaustWorkingLevel float[0.00,100.00](%); exhaustFlapOpeningLevel float[0.00,100.00](%); currentState enum[0=off,1=on](); workingMode enum[0=off,1=heating,2=cooling,3=auto](); elementInfo enum[0=ok,1=manualOff,2=manualOn,3=locked,4=alarm](); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			},
+			"scmd":	{
+				"description":	"Summary of the commands and their formats",
+				"format":	"0|1|T1.1|P2.2|F3.3|Q4.4|H5.5|M0|M1|M2|M3 (Off|On|Temperature|Power|MinFlap|Quality|Humidity|ModeOff|ModeHeating|ModeCooling|ModeAuto)",
+				"type":	"STRING",
+				"permission":	"WRITE",
+				"index":	1000070
+			}
+		},
+		"group0":	{
+			"name":	"Grp 1",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Off|1=On]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	10000000
+			}
+		}
+	},
+	"saunas":	{
+		"item0":	{
+			"name":	"Sauna 1",
+			"page":	"Sauna",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"workingMode enum[0=off,1=on/finnish,2=bio](); currentState enum[0=off,1=on](); elementInfo enum[0=ok,1=manualOff,2=manualOn,3=locked,4=alarm](); errorState enum[0=noError,1=error](); roomTemperatureValue float[0.00,100.00](°C); roomTemperatureSetPointValue float[0.00,1000.00](°C); burnerTemperatureValue float[0.00,1000.00](°C); roomRelativeHumidityLevel float[0.00,100.00](%); roomRelativeHumiditySetPointLevel float[0.00,100.00](%); elementInfo enum[0=ok,1=manualOff,2=manualOn,3=locked,4=alarm](); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			},
+			"scmd":	{
+				"description":	"Summary of the commands and their formats",
+				"format":	"0|1|2 (Off|On/Finnish|Bio)",
+				"type":	"STRING",
+				"permission":	"WRITE",
+				"index":	1100070
+			}
+		},
+		"group0":	{
+			"name":	"Grp 1",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Off|1=On]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	11000000
+			}
+		}
+	},
+	"pools":	{
+		"item0":	{
+			"name":	"Pool",
+			"page":	"Pool",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"workingMode enum[0=off,1=restMode,2=bathing](); filteringState enum[0=off,1=on](); backwashState enum[0=off,1=on](); elementInfo enum[0=ok,1=manualOff,2=manualOn,3=locked,4=alarm](); waterTemperatureValue float[0.00,100.00](°C); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			},
+			"scmd":	{
+				"description":	"Summary of the commands and their formats",
+				"format":	"M0|M1|M2|C1|C2|C3|T100 (Off|Standby|Active|CleanFilter1|CleanFilter2|CleanFilter3|Temperature)",
+				"type":	"STRING",
+				"permission":	"WRITE",
+				"index":	1150070
+			}
+		},
+		"group0":	{
+			"name":	"Grp 1",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Off|1=On]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	11500000
+			}
+		}
+	},
+	"trends":	{
+		"item0":	{
+			"name":	"Temperatures",
+			"page":	"Heating pump",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"variable1State enum[0=off,1=on](); variable1Type enum[0=logic,1=dIn,2=dOut,3=aIn,4=aOut,5=aIn2_10,6=pt100,7=pt1000](); variable1Name string[name](); variable1Value float[...,...](unit1); variable1Unit string[unitName](I.S.); variable2State enum[0=off,1=on](); variable2Type enum[0=logic,1=dIn,2=dOut,3=aIn,4=aOut,5=aIn2_10,6=pt100,7=pt1000](); variable2Name string[name](); variable2Value float[...,...](unit2); variable2Unit string[unitName](I.S.); variable3State enum[0=off,1=on](); variable3Type enum[0=logic,1=dIn,2=dOut,3=aIn,4=aOut,5=aIn2_10,6=pt100,7=pt1000](); variable3Name string[name](); variable3Value float[...,...](unit3); variable3Unit string[unitName](I.S.); variable4State enum[0=off,1=on](); variable4Type enum[0=logic,1=dIn,2=dOut,3=aIn,4=aOut,5=aIn2_10,6=pt100,7=pt1000](); variable4Name string[name](); variable4Value float[...,...](unit4); variable4Unit string[unitName](I.S.); elementInfo enum[0=ok,1=manualOff,2=manualOn,3=locked,4=alarm](); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			},
+			"scmd":	{
+				"description":	"Summary of the commands and their formats",
+				"format":	"S44.7 (SetpointValue)",
+				"type":	"STRING",
+				"permission":	"WRITE",
+				"index":	1350070
+			}
+		},
+		"group0":	{
+			"name":	"Grp 1",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Off|1=On]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	13500000
+			}
+		}
+	},
+	"emobils":	{
+		"item0":	{
+			"name":	"Chragin station  1",
+			"page":	"E-Mobility",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"pluggedState enum[0=notPlugged,1=plugged](); chargeState enum[0=off,1=on,2=paused](); chargeRequestState enum[0=off,1=on](); currentChargingPowerValue float[1.00,100.00](kW); maximumChargingPowerValue float[1.00,100.00](kW); chargingPowerSetPointValue float[1.00,100.00](kW); electricCurrentSetPointValue int[0,...](A); chargeUserName string[name](); chargeDurationTime string[hh:mm:ss](); currentChargingEnergyValue float[0.00,...](kWh); elementInfo enum[0=ok,1=manualOff,2=manualOn,3=locked,4=alarm](); chargeStartTime string[hh:mm:ss](); chargeUserIndex int[1,20](userID); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			},
+			"scmd":	{
+				"description":	"Summary of the commands and their formats",
+				"format":	"1|-1|P10|R4|LO|LI4|CS4.6 (Start Charge|Stop Charge|Start Partial Energy Charge [kWh]|Reset User Charging History[1..20]|Logout User|Login User [1..20]|Charge Power Setpoint [kW])",
+				"type":	"STRING",
+				"permission":	"WRITE",
+				"index":	1400070
+			}
+		},
+		"group0":	{
+			"name":	"Grp 1",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Off|1=On]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	14000000
+			}
+		}
+	},
+	"hotwater_systems":	{
+		"item0":	{
+			"name":	"Warm water",
+			"page":	"Storeage",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"deviceModel enum[0=individual,1=buderus,2=stiebel,3=tecalor,4=vaillant](); coolingModeState enum[0=off,1=on](); waterTemperatureSetPointValue float[-100.00,100.00](°C); waterTemperatureTopValue float[-100.00,100.00](°C); waterTemperatureBottomValue float[-100.00,100.00](°C); collectorTemperatureValue float[-100.00,100.00](°C); currentState enum[0=off,1=on](); elementInfo enum[0=ok,1=manualOff,2=manualOn,3=locked,4=alarm](); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			},
+			"scmd":	{
+				"description":	"Summary of the commands and their formats",
+				"format":	"0|1|T100 (Off|On|Temperature[°C])",
+				"type":	"STRING",
+				"permission":	"WRITE",
+				"index":	1950070
+			}
+		},
+		"group0":	{
+			"name":	"Grp 1",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Off|1=On]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	19500000
+			}
+		}
+	},
+	"hotwater_circulations":	{
+		"item0":	{
+			"name":	"Hot water circulation",
+			"page":	"Circulation",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"pumpType enum[0=on/off,1=pwm,2=0..100%](); currentState enum[0=off,1=on](); returnWaterTemperatureValue float[0.00,100.00](°C); returnWaterTemperatureSetPointValue float[0.00,100.00](°C); elementInfo enum[0=ok,1=manualOff,2=manualOn,3=locked,4=alarm](); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			},
+			"scmd":	{
+				"description":	"Summary of the commands and their formats",
+				"format":	"0|1 (Off|On)",
+				"type":	"STRING",
+				"permission":	"WRITE",
+				"index":	2000070
+			}
+		},
+		"group0":	{
+			"name":	"Grp 1",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Off|1=On]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	20000000
+			}
+		}
+	},
+	"stoves":	{
+		"item0":	{
+			"name":	"Fire place",
+			"page":	"Fire places",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"temperatureValue float[20.00,1000.00](°C); flapOpeningLevel float[0.00,100.00](%); currentState enum[1=stoveIdle,5=enkindleRecognized->closeDoor,7=enkindleRecognized,9=activeTempReached,11=residueFinished,13=stoveCooledOff](); workingState enum[0=idle,1=active](); elementInfo enum[0=ok,1=manualOff,2=manualOn,3=locked,4=alarm](); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			}
+		},
+		"group0":	{
+			"name":	"Grp 1",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Off|1=On]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	20500000
+			}
+		}
+	},
+	"door_intercom":	{
+		"item0":	{
+			"name":	"Entrance",
+			"page":	"General",
+			"imagepath":	"http://192.168.1.220/api/camera/snapshot?width=640&height=480",
+			"streampath":	"http://192.168.1.220/api/camera/snapshot?width=640&height=480&fps=15",
+			"sumstate":	{
+				"description":	"Summary of the states and their formats",
+				"format":	"soundMode enum[0=mute,1=ringing](); actionOnRingState enum[0=off,1=on]; connectionState enum[-6=errorProcessing,-5=errorAuthorization,-4=voIPNotActive,-3=errorFavCheck,-2=errorProvisioning,-1=errorConnection,0=notSet,1=ok](); missedCallsValue int[0,65535](); lastMissedCallDate string[dd.mm.yyyy hh:mm:ss](); ",
+				"type":	"STRING",
+				"permission":	"READ"
+			},
+			"scmd":	{
+				"description":	"Summary of the commands and their formats",
+				"format":	"O|M1|M0|A1|A0 (O=Open|M1=Ringing|M0=Mute|A1=ActionOn|A0=ActionOff)",
+				"type":	"STRING",
+				"permission":	"WRITE",
+				"index":	2100070
+			}
+		},
+		"group0":	{
+			"name":	"Grp 1",
+			"sumstate":	{
+				"description":	"Summary of the group states and their formats",
+				"format":	"State[0=Off|1=On]",
+				"type":	"AO",
+				"permission":	"READ",
+				"index":	21000000
+			},
+			"scmd":	{
+				"description":	"Summary of the group commands and their formats",
+				"format":	"OP1|OP0|A1|A0 (ModeRinging|ModeMute|ActionOn|ActionOff)",
+				"type":	"AV",
+				"permission":	"WRITE",
+				"index":	21000001
+			}
+		}
+	}
+}
