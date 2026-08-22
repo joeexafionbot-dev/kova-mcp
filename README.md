@@ -10,7 +10,7 @@ quickstart below.*
 
 **KOVA MCP ist das Werkzeug für Bastler und Power-User.** Wer das täglich, am Handy
 und für die ganze Familie will — ohne Terminal: das ist die **KOVA App**
-([gekkobrain.beikma.com](https://gekkobrain.beikma.com)).
+([kova.casa](https://kova.casa)).
 
 ---
 

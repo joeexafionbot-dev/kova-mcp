@@ -81,7 +81,7 @@ class Settings(BaseSettings):
     # "Authorization: Bearer <gkmcp_…>". This server resolves it to that tenant's
     # myGEKKO creds by POSTing {token} to resolve_url with the shared secret — so
     # the user never re-enters credentials. Falls back to X-MyGEKKO-* headers when unset.
-    resolve_url: str = ""  # e.g. https://gekkobrain.beikma.com/api/mcp-auth/resolve
+    resolve_url: str = ""  # e.g. https://app.kova.casa/api/mcp-auth/resolve
     resolve_secret: SecretStr = SecretStr("")  # MUST equal GEKKO BRAIN's MCP_RESOLVE_SECRET
     resolve_cache_ttl: float = 300.0  # seconds a resolved identity is cached (revocation latency)
     resolve_cache_max: int = 512
@@ -89,7 +89,7 @@ class Settings(BaseSettings):
     # --- history export (GEKKO BRAIN's own tsdb/events, NOT the live myGEKKO controller) ---
     # Base URL for GET {base}/history and GET {base}/event-summary. Usually left unset — derived
     # from resolve_url (same GEKKO BRAIN host) via history_base_url_effective below.
-    history_base_url: str = ""  # e.g. https://gekkobrain.beikma.com/api/mcp
+    history_base_url: str = ""  # e.g. https://app.kova.casa/api/mcp
 
     # --- streamable-http transport (Phase 2) ---
     # Bind to loopback by default; a TLS reverse proxy (nginx) terminates HTTPS
